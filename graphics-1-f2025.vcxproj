@@ -47,7 +47,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./inc</AdditionalIncludeDirectories>
     </ClCompile>
@@ -64,7 +64,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>./inc</AdditionalIncludeDirectories>
     </ClCompile>
@@ -76,11 +76,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="inc\imgui\imgui.cpp" />
+    <ClCompile Include="inc\imgui\imgui_demo.cpp" />
+    <ClCompile Include="inc\imgui\imgui_draw.cpp" />
+    <ClCompile Include="inc\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="inc\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="inc\imgui\imgui_tables.cpp" />
+    <ClCompile Include="inc\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Buffer.cpp" />
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\imgui\imconfig.h" />
+    <ClInclude Include="inc\imgui\imgui.h" />
+    <ClInclude Include="inc\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="inc\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="inc\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="inc\imgui\imgui_internal.h" />
+    <ClInclude Include="inc\imgui\imstb_rectpack.h" />
+    <ClInclude Include="inc\imgui\imstb_textedit.h" />
+    <ClInclude Include="inc\imgui\imstb_truetype.h" />
+    <ClInclude Include="inc\stb_image\stb_image.h" />
+    <ClInclude Include="inc\stb_image\stb_image_write.h" />
+    <ClInclude Include="src\Buffer.h" />
+    <ClInclude Include="src\Mesh.h" />
+    <ClInclude Include="src\raymath.h" />
+    <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
