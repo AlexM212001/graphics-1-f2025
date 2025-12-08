@@ -110,7 +110,7 @@ int main()
     LoadMeshHemisphere(&meshes[MESH_HEMISPHERE]);
 
     LoadMeshObj(&meshes[MESH_HEAD], "./assets/meshes/head.obj");
-    
+
     GLuint position_color_vert = CreateShader(GL_VERTEX_SHADER, "./assets/shaders/position_color.vert");
     GLuint tcoord_color_vert = CreateShader(GL_VERTEX_SHADER, "./assets/shaders/tcoord_color.vert");
     GLuint normal_color_vert = CreateShader(GL_VERTEX_SHADER, "./assets/shaders/normal_color.vert");
@@ -148,7 +148,7 @@ int main()
 
         // read mouse delta (horizontal->yaw, vertical->pitch)
         Vector2 mouse_delta = GetMouseDelta();
-        camera.yaw   += mouse_delta.x * mouse_sensitivity;
+        camera.yaw += mouse_delta.x * mouse_sensitivity;
         camera.pitch += mouse_delta.y * mouse_sensitivity;
 
         // clamp pitch to avoid flipping
@@ -161,8 +161,9 @@ int main()
         if (IsKeyPressed(KEY_GRAVE_ACCENT))
             ++shader_index %= SHADER_TYPE_COUNT;
 
+        // cycle meshes with TAB
         if (IsKeyPressed(KEY_TAB))
-            mesh_index = MESH_PLANE + ((mesh_index + 1) % MESH_TYPE_COUNT);
+            mesh_index = (mesh_index + 1) % MESH_TYPE_COUNT;
 
         if (IsKeyPressed(KEY_T))
             ++texture_index %= TEXTURE_TYPE_COUNT;
@@ -177,13 +178,13 @@ int main()
         // Extend Window.h & Window.cpp based on glfw documentation to track the change in mouse-position between frames, then make a function to return the mouse delta as a Vector2.
         if (IsKeyDown(KEY_1))
             camera.yaw -= 100.0f * dt * DEG2RAD;
-        
+
         if (IsKeyDown(KEY_2))
             camera.yaw += 100.0f * dt * DEG2RAD;
-        
+
         if (IsKeyDown(KEY_3))
             camera.pitch -= 100.0f * dt * DEG2RAD;
-        
+
         if (IsKeyDown(KEY_4))
             camera.pitch += 100.0f * dt * DEG2RAD;
 
@@ -194,19 +195,19 @@ int main()
 
         if (IsKeyDown(KEY_W))
             camera.position -= camera_direction_z * 10.0f * dt;
-        
+
         if (IsKeyDown(KEY_S))
             camera.position += camera_direction_z * 10.0f * dt;
-        
+
         if (IsKeyDown(KEY_D))
             camera.position += camera_direction_x * 10.0f * dt;
-        
+
         if (IsKeyDown(KEY_A))
             camera.position -= camera_direction_x * 10.0f * dt;
-         
+
         if (IsKeyDown(KEY_SPACE))
             camera.position += camera_direction_y * 10.0f * dt;
-        
+
         if (IsKeyDown(KEY_LEFT_SHIFT))
             camera.position -= camera_direction_y * 10.0f * dt;
 
@@ -220,42 +221,42 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Example "mix-and-match" draw calls to understand Smiley's code
-        //BeginShader(shaders[shader_index]);
-        //BeginTexture(textures[texture_index]);
-        //    SendMat4(mvp, "u_mvp");
-        //    DrawMesh(meshes[mesh_index]);
-        //EndTexture();
-        //EndShader();
-        // (Replace with A4 draw types within the switch-case below):
-
+        // Decide which mesh to draw for the current draw mode.
+        // Some shaders / draw-modes expect meshes with texture coordinates or other attributes.
+        int draw_mesh = mesh_index;
         switch (draw_index)
         {
         case A4_PAR_SHAPES_NORMAL_SHADER:
         {
+            // normal-color shader can render any of the parametric shapes
             BeginShader(shaders[SHADER_NORMAL_COLOR]);
             SendMat4(mvp, "u_mvp");
-            DrawMesh(meshes[MESH_SPHERE]); // or plane, hemisphere
+            DrawMesh(meshes[draw_mesh]);
             EndShader();
         }
         break;
-           
 
         case A4_OBJ_FILE_TCOORDS_SHADER:
         {
+            // this draw mode expects an OBJ with texture coords; force HEAD if current mesh lacks tcoords
+            if (draw_mesh != MESH_HEAD)
+                draw_mesh = MESH_HEAD;
             BeginShader(shaders[SHADER_TCOORD_COLOR]);
             SendMat4(mvp, "u_mvp");
-            DrawMesh(meshes[MESH_HEAD]);
+            DrawMesh(meshes[draw_mesh]);
             EndShader();
         }
         break;
 
         case A4_CT4_TEXTURE_SHADER:
         {
+            // textured draw requires a mesh with texture coordinates (plane or head here)
+            if (draw_mesh != MESH_PLANE && draw_mesh != MESH_HEAD)
+                draw_mesh = MESH_PLANE;
             BeginShader(shaders[SHADER_SAMPLE_TEXTURE]);
             BeginTexture(textures[texture_index]); // warm/cool gradient
             SendMat4(mvp, "u_mvp");
-            DrawMesh(meshes[MESH_PLANE]); // or your CT4 mesh
+            DrawMesh(meshes[draw_mesh]);
             EndTexture();
             EndShader();
         }
@@ -278,7 +279,7 @@ int main()
             EndShader();
         }
         break;
-    }
+        }
 
         BeginGui();
         //ImGui::ShowDemoWindow(nullptr);
