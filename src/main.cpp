@@ -70,21 +70,7 @@ void LoadTextures(Texture textures[TEXTURE_TYPE_COUNT])
     LoadTexture(&textures[TEXTURE_GRADIENT_WARM], warm);
     LoadTexture(&textures[TEXTURE_GRADIENT_COOL], cool);
 }
-void LoadMeshTriangle(Mesh* mesh)
-{
-    mesh->vertex_count = 3;
-    mesh->positions = {
-        { -0.5f, -0.5f, 0.0f },
-        {  0.5f, -0.5f, 0.0f },
-        {  0.0f,  0.5f, 0.0f }
-    };
 
-    mesh->normals = {
-        Vector3UnitZ, Vector3UnitZ, Vector3UnitZ
-    };
-
-    LoadMeshGPU(mesh);
-}
 
 struct Camera
 {
@@ -136,7 +122,7 @@ int main()
     int draw_index = A4_PAR_SHAPES_NORMAL_SHADER;
     // manual mesh (triangle) 
     Mesh my_manual_mesh;
-    LoadMeshTriangle(&my_manual_mesh);
+   
 
     const float mouse_sensitivity = 0.0025f;
     const float max_pitch = 89.0f * DEG2RAD;
@@ -263,21 +249,11 @@ int main()
         break;
 
         case A4_MANUAL_MESH:
-        {
-            BeginShader(shaders[SHADER_POSITION_COLOR]);
-            SendMat4(mvp, "u_mvp");
-            DrawMesh(my_manual_mesh);
-            EndShader();
-        }
+       
         break;
 
         case A4_CUSTOM_DRAW:
-        {
-            BeginShader(shaders[SHADER_POSITION_COLOR]);
-            SendMat4(mvp, "u_mvp");
-            DrawMesh(my_manual_mesh);
-            EndShader();
-        }
+      
         break;
         }
 
